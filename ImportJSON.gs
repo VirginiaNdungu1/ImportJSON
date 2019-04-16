@@ -505,7 +505,8 @@ function defaultTransform_(data, row, column, options) {
       removeCommonPrefixes_(data, row);  
     }
     
-    data[row][column] = toTitleCase_(data[row][column].toString().replace(/[\/\_]/g, " "));
+//    data[row][column] = toTitleCase_(data[row][column].toString().replace(/[\/\_]/g, " "));
+    data[row][column] = toTitleCase_(data[row][column].split('/').splice(-1).toString().replace(/[\/\_]/g, " "));
   }
   
   if (!hasOption_(options, "noTruncate") && data[row][column]) {
