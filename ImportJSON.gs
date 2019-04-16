@@ -52,6 +52,7 @@
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
  *    allHeaders:    Include all headers from the query parameter in the order they are listed
+ *    removeHeaderPaths:    Remove the paths to the headers
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -94,7 +95,9 @@ function ImportJSON(url, query, parseOptions) {
  *    noTruncate:    Don't truncate values
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
- *    allHeaders:    Include all headers from the query parameter in the order they are listed
+ *    allHeaders:    Include all headers from the query parameter in the order they are listed 
+ *    removeHeaderPaths:    Remove the paths to the headers
+ 
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -153,6 +156,7 @@ function ImportJSONViaPost(url, payload, fetchOptions, query, parseOptions) {
  *    rawHeaders:    Don't prettify headers
  *    noHeaders:     Don't include headers, only the data
  *    allHeaders:    Include all headers from the query parameter in the order they are listed
+ *    removeHeaderPaths:    Remove the paths to the headers
  *    debugLocation: Prepend each value with the row & column it belongs in
  *
  * For example:
@@ -489,6 +493,7 @@ function applyXPathRule_(rule, path, options) {
  *    noInherit:     Don't inherit values from parent elements
  *    noTruncate:    Don't truncate values
  *    rawHeaders:    Don't prettify headers
+ *    removeHeaderPaths:    Remove the paths to the headers
  *    debugLocation: Prepend each value with the row & column it belongs in
  */
 function defaultTransform_(data, row, column, options) {
@@ -505,8 +510,11 @@ function defaultTransform_(data, row, column, options) {
       removeCommonPrefixes_(data, row);  
     }
     
-//    data[row][column] = toTitleCase_(data[row][column].toString().replace(/[\/\_]/g, " "));
-    data[row][column] = toTitleCase_(data[row][column].split('/').splice(-1).toString().replace(/[\/\_]/g, " "));
+    if (hasOption_(options, "removeHeaderPaths")  && row == 0) {
+      data[row][column] = toTitleCase_(data[row][column].split('/').splice(-1).toString().replace(/[\/\_]/g, " "));      
+    } else {
+      data[row][column] = toTitleCase_(data[row][column].toString().replace(/[\/\_]/g, " "));
+    }
   }
   
   if (!hasOption_(options, "noTruncate") && data[row][column]) {
